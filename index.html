@@ -255,11 +255,17 @@ const HOVERED_CLASS = {'AI入口':'ai','試算表':'sheet','工作流程':'flow'
 
 function parseCSV(text){
   const lines = text.trim().split('\n');
-  const headers = splitCSVLine(lines[0]);
+  const rawHeaders = splitCSVLine(lines[0]);
+  // 過濾標頭欄位，只保留空格或箭頭前的核心屬性名稱（例如 "名稱 ← 顯示名稱" -> "名稱"）
+  const headers = rawHeaders.map(h => {
+    const clean = h.trim();
+    const parts = clean.split(/[\s←]+/);
+    return parts[0] || clean;
+  });
   return lines.slice(1).map(l => {
     const vals = splitCSVLine(l);
     const obj = {};
-    headers.forEach((h,i) => obj[h.trim()] = (vals[i]||'').trim());
+    headers.forEach((h,i) => obj[h] = (vals[i]||'').trim());
     return obj;
   });
 }
