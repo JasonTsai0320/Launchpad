@@ -38,47 +38,69 @@
 
   /* ── NAV ── */
   nav{
-    position:sticky;top:0;z-index:100;
-    background:var(--bg2);
-    border-bottom:1px solid var(--border);
-    padding:10px 20px;
+    position:sticky;
+    top:12px;
+    z-index:100;
+    background:var(--nav-bg, rgba(22, 22, 26, 0.75));
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:8px 16px;
+    margin:12px auto 0 auto;
+    max-width:900px;
+    width:calc(100% - 40px);
     display:flex;
     align-items:center;
-    gap:8px;
+    justify-content:space-between;
+    gap:16px;
+    box-shadow:0 8px 32px 0 rgba(0,0,0,0.37);
   }
   .nav-logo{
     font-family:'DM Mono',monospace;
-    font-size:12px;
-    color:var(--text-dim);
+    font-size:13px;
+    color:var(--text);
+    font-weight:600;
     letter-spacing:0.1em;
-    margin-right:8px;
     white-space:nowrap;
   }
-  .tab-bar{display:flex;gap:6px;}
+  .tab-bar{
+    display:flex;
+    gap:8px;
+  }
   .tab{
     flex:none;
-    padding:9px 16px;
-    border-radius:8px;
+    padding:10px 20px;
+    border-radius:10px;
     border:1px solid transparent;
     background:transparent;
     color:var(--text-muted);
     font-family:'Noto Sans TC',sans-serif;
-    font-size:13px;
+    font-size:14px;
     font-weight:500;
     cursor:pointer;
-    transition:all 0.15s;
-    display:flex;align-items:center;justify-content:center;gap:6px;
+    transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display:flex;align-items:center;justify-content:center;gap:8px;
     white-space:nowrap;
   }
-  .tab:hover{background:var(--bg3);color:var(--text);}
+  .tab:hover{
+    background:var(--bg3);
+    color:var(--text);
+    transform:translateY(-1px);
+  }
   .tab.active{
     background:var(--bg3);
     border-color:var(--border-hover);
     color:var(--text);
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
   }
   .tab .dot{
-    width:7px;height:7px;border-radius:50%;
+    width:8px;height:8px;border-radius:50%;
     flex-shrink:0;
+    transition:transform 0.2s;
+  }
+  .tab:hover .dot{
+    transform:scale(1.25);
   }
   .tab[data-page="AI入口"] .dot{background:var(--c-ai);}
   .tab[data-page="試算表"] .dot{background:var(--c-sheet);}
@@ -86,7 +108,7 @@
   .tab[data-page="課程專用"] .dot{background:var(--c-class);}
 
   /* ── MAIN ── */
-  main{flex:1;padding:20px;max-width:900px;width:100%;margin:0 auto;}
+  main{flex:1;padding:20px;padding-top:28px;max-width:900px;width:100%;margin:0 auto;}
 
   /* ── PAGE ── */
   .page{display:none;animation:fadeUp 0.25s ease both;}
@@ -228,7 +250,6 @@ const SHEET_ID = '1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c';
 const TOOLS_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=tools`;
 const THEME_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=theme`;
 
-const PAGE_ORDER = ['AI入口','試算表','工作流程','課程專用'];
 const PAGE_EMOJI = {'AI入口':'🤖','試算表':'📊','工作流程':'⚙️','課程專用':'📚'};
 const HOVERED_CLASS = {'AI入口':'ai','試算表':'sheet','工作流程':'flow','課程專用':'class'};
 
@@ -261,7 +282,7 @@ function applyTheme(rows){
   const setVar=(name,key)=>{ if(map[key]) document.documentElement.style.setProperty(name,map[key]); };
   setVar('--bg','背景色');
   setVar('--bg2','卡片色');
-  setVar('--bg2','導覽列背景');
+  setVar('--nav-bg','導覽列背景');
   setVar('--bg3','導覽列選中色');
   setVar('--text','主文字色');
   setVar('--text-muted','次文字色');
@@ -278,38 +299,44 @@ function buildUI(tools){
   main.innerHTML='';
   tabBar.innerHTML='';
 
-  // filter visible only, sort
+  // filter visible only, sort by 排序
   const visible = tools
     .filter(t => t['顯示']==='✓' && t['名稱'] && !t['名稱'].startsWith('←'))
     .sort((a,b)=> parseInt(a['排序']||99)-parseInt(b['排序']||99));
 
-  // group by 分頁 → 區塊
-  const pages={};
-  PAGE_ORDER.forEach(p=>pages[p]=[]);
+  // 動態取得分頁順序：依試算表中第一次出現的順序
+  const pageOrder=[];
   visible.forEach(t=>{
     const pg=t['分頁']||'AI入口';
-    if(!pages[pg]) pages[pg]=[];
+    if(!pageOrder.includes(pg)) pageOrder.push(pg);
+  });
+
+  // group by 分頁 → 區塊
+  const pages={};
+  pageOrder.forEach(p=>pages[p]=[]);
+  visible.forEach(t=>{
+    const pg=t['分頁']||'AI入口';
     pages[pg].push(t);
   });
 
   // build tabs
   let firstActive=true;
-  PAGE_ORDER.forEach(pg=>{
+  pageOrder.forEach(pg=>{
     if(!pages[pg]||pages[pg].length===0) return;
     const btn=document.createElement('button');
     btn.className='tab'+(firstActive?' active':'');
     btn.dataset.page=pg;
-    btn.innerHTML=`<span class="dot"></span>${PAGE_EMOJI[pg]||''} ${pg}`;
+    btn.innerHTML=`<span class="dot"></span>${PAGE_EMOJI[pg]||'🔹'} ${pg}`;
     btn.onclick=()=>switchPage(pg);
     tabBar.appendChild(btn);
     firstActive=false;
   });
 
   // build pages
-  PAGE_ORDER.forEach(pg=>{
+  pageOrder.forEach(pg=>{
     if(!pages[pg]||pages[pg].length===0) return;
     const pageEl=document.createElement('div');
-    pageEl.className='page'+(PAGE_ORDER.indexOf(pg)===0?' active':'');
+    pageEl.className='page'+(pageOrder.indexOf(pg)===0?' active':'');
     pageEl.id='page-'+pg;
 
     // group by 區塊
@@ -328,9 +355,8 @@ function buildUI(tools){
       hdr.className='section-header';
       const lbl=document.createElement('span');
       lbl.className='section-label';
-      lbl.style.color = pg==='AI入口'?'var(--c-ai)':
-                        pg==='試算表'?'var(--c-sheet)':
-                        pg==='工作流程'?'var(--c-flow)':'var(--c-class)';
+      const PAGE_COLOR={'AI入口':'var(--c-ai)','試算表':'var(--c-sheet)','工作流程':'var(--c-flow)','課程專用':'var(--c-class)'};
+      lbl.style.color = PAGE_COLOR[pg]||'var(--c-ai)';
       lbl.textContent=blockName;
       hdr.appendChild(lbl);
       const line=document.createElement('div');
