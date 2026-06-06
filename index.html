@@ -6,7 +6,6 @@
 <title>AI 工作台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <style>
   :root {
     --bg: #0f0f11;
@@ -389,58 +388,24 @@ function switchPage(pg){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+pg));
 }
 
-function parsePapa(csv){
-  const result = Papa.parse(csv, {header:true, skipEmptyLines:true});
-  return result.data.map(row=>{
-    const clean={};
-    Object.keys(row).forEach(k=>clean[k.trim()]=String(row[k]||'').trim());
-    return clean;
-  });
-}
-
-function init(){
-  let toolRows=[], themeRows=[], done=0;
-
-  function tryBuild(){
-    done++;
-    if(done===2){
-      applyTheme(themeRows);
-      buildUI(toolRows);
-    }
+async function init(){
+  try{
+    const [toolsText, themeText] = await Promise.all([
+      fetch(TOOLS_CSV).then(r=>r.text()),
+      fetch(THEME_CSV).then(r=>r.text())
+    ]);
+    const themeRows = parseCSV(themeText);
+    applyTheme(themeRows);
+    const toolRows = parseCSV(toolsText);
+    buildUI(toolRows);
+  } catch(e){
+    document.getElementById('loading').innerHTML=
+      `<div style="color:#f87171;font-family:monospace;font-size:12px;">
+        ❌ 無法載入試算表<br><br>
+        <span style="color:#7a7a8c;">請確認試算表已設為「知道連結的人可以檢視」</span><br>
+        <span style="color:#4a4a5a;font-size:10px;margin-top:8px;display:block;">${e.message}</span>
+      </div>`;
   }
-
-  Papa.parse(TOOLS_CSV,{
-    download:true, header:true, skipEmptyLines:true,
-    complete:function(r){
-      toolRows=r.data.map(row=>{
-        const clean={};
-        Object.keys(row).forEach(k=>clean[k.trim()]=String(row[k]||'').trim());
-        return clean;
-      });
-      tryBuild();
-    },
-    error:function(e){
-      document.getElementById('loading').innerHTML=
-        `<div style="color:#f87171;font-family:monospace;font-size:12px;">
-          ❌ 無法載入工具清單<br><br>
-          <span style="color:#7a7a8c;">請確認試算表已「發布到網路」</span><br>
-          <span style="color:#4a4a5a;font-size:10px;margin-top:8px;display:block;">${e.message}</span>
-        </div>`;
-    }
-  });
-
-  Papa.parse(THEME_CSV,{
-    download:true, header:true, skipEmptyLines:true,
-    complete:function(r){
-      themeRows=r.data.map(row=>{
-        const clean={};
-        Object.keys(row).forEach(k=>clean[k.trim()]=String(row[k]||'').trim());
-        return clean;
-      });
-      tryBuild();
-    },
-    error:function(){ tryBuild(); }
-  });
 }
 
 init();
