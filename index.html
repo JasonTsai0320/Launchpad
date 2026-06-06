@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f11;
+    --bg2: #16161a;
+    --bg3: #1e1e24;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.18);
+    --text: #e8e8f0;
+    --text-muted: #7a7a8c;
+    --text-dim: #4a4a5a;
+    --radius: 10px;
+    --c-ai: #a78bfa;
+    --c-sheet: #38bdf8;
+    --c-flow: #34d399;
+    --c-class: #f59e0b;
+    --c-ai-bg: rgba(167,139,250,0.08);
+    --c-sheet-bg: rgba(56,189,248,0.08);
+    --c-flow-bg: rgba(52,211,153,0.08);
+    --c-class-bg: rgba(245,158,11,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans TC',sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ── NAV ── */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:var(--bg2);
+    border-bottom:1px solid var(--border);
+    padding:10px 20px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .nav-logo{
+    font-family:'DM Mono',monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    letter-spacing:0.1em;
+    margin-right:8px;
+    white-space:nowrap;
+  }
+  .tab-bar{display:flex;gap:6px;flex:1;}
+  .tab{
+    flex:1;
+    padding:9px 10px;
+    border-radius:8px;
+    border:1px solid transparent;
+    background:transparent;
+    color:var(--text-muted);
+    font-family:'Noto Sans TC',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all 0.15s;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    white-space:nowrap;
+  }
+  .tab:hover{background:var(--bg3);color:var(--text);}
+  .tab.active{
+    background:var(--bg3);
+    border-color:var(--border-hover);
+    color:var(--text);
+  }
+  .tab .dot{
+    width:7px;height:7px;border-radius:50%;
+    flex-shrink:0;
+  }
+  .tab[data-page="AI入口"] .dot{background:var(--c-ai);}
+  .tab[data-page="試算表"] .dot{background:var(--c-sheet);}
+  .tab[data-page="工作流程"] .dot{background:var(--c-flow);}
+  .tab[data-page="課程專用"] .dot{background:var(--c-class);}
+
+  /* ── MAIN ── */
+  main{flex:1;padding:20px;max-width:900px;width:100%;margin:0 auto;}
+
+  /* ── PAGE ── */
+  .page{display:none;animation:fadeUp 0.25s ease both;}
+  .page.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── SECTION ── */
+  .section{margin-bottom:2rem;}
+  .section-header{
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:12px;
+  }
+  .section-label{
+    font-family:'DM Mono',monospace;
+    font-size:10px;
+    font-weight:500;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .section-line{flex:1;height:1px;background:var(--border);}
+
+  /* ── SHEET ROW (big chips) ── */
+  .sheet-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:8px;
+  }
+  .sheet-chip{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    text-decoration:none;
+    color:var(--text);
+    transition:all 0.15s;
+    cursor:pointer;
+  }
+  .sheet-chip:hover{
+    background:var(--c-sheet-bg);
+    border-color:rgba(56,189,248,0.35);
+    transform:translateY(-1px);
+  }
+  .sheet-icon{font-size:22px;flex-shrink:0;}
+  .sheet-name{font-size:13px;font-weight:500;line-height:1.3;}
+  .sheet-desc{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+  /* ── CARD GRID (medium) ── */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+    gap:8px;
+  }
+  .card{
+    display:flex;align-items:center;gap:11px;
+    padding:11px 13px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    text-decoration:none;
+    color:var(--text);
+    transition:all 0.15s;
+    cursor:pointer;
+  }
+  .card:hover{border-color:var(--border-hover);transform:translateY(-1px);}
+  .card.ai:hover{background:var(--c-ai-bg);border-color:rgba(167,139,250,0.3);}
+  .card.flow:hover{background:var(--c-flow-bg);border-color:rgba(52,211,153,0.3);}
+  .card.class:hover{background:var(--c-class-bg);border-color:rgba(245,158,11,0.3);}
+  .card.sheet:hover{background:var(--c-sheet-bg);border-color:rgba(56,189,248,0.3);}
+  .card-icon{
+    width:34px;height:34px;border-radius:8px;
+    background:var(--bg3);
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;flex-shrink:0;
+  }
+  .card-info{flex:1;min-width:0;}
+  .card-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card-desc{font-size:11px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  /* ── LOADING / ERROR ── */
+  .loading{
+    display:flex;align-items:center;justify-content:center;
+    height:200px;
+    font-family:'DM Mono',monospace;
+    font-size:12px;color:var(--text-dim);
+    flex-direction:column;gap:12px;
+  }
+  .spinner{
+    width:24px;height:24px;
+    border:2px solid var(--border);
+    border-top-color:var(--c-ai);
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ── FOOTER ── */
+  footer{
+    padding:12px 20px;
+    border-top:1px solid var(--border);
+    font-family:'DM Mono',monospace;
+    font-size:10px;color:var(--text-dim);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  #last-update{color:var(--text-dim);}
+
+  /* ── PENDING BADGE ── */
+  .pending{
+    display:inline-block;
+    font-size:9px;padding:2px 6px;
+    border-radius:4px;
+    background:rgba(245,158,11,0.15);
+    color:#f59e0b;
+    margin-left:4px;vertical-align:middle;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">⬡ AI WS</span>
+  <div class="tab-bar" id="tabBar"></div>
+</nav>
+
+<main id="main">
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <span>載入工具清單中…</span>
+  </div>
+</main>
+
+<footer>
+  <span>⬡ AI Workspace · 個人版</span>
+  <span id="last-update"></span>
+</footer>
+
+<script>
+const SHEET_ID = '1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c';
+const TOOLS_GID  = '0';
+const THEME_GID  = '732975970';
+const CSV_BASE   = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=`;
+
+const PAGE_ORDER = ['AI入口','試算表','工作流程','課程專用'];
+const PAGE_EMOJI = {'AI入口':'🤖','試算表':'📊','工作流程':'⚙️','課程專用':'📚'};
+const HOVERED_CLASS = {'AI入口':'ai','試算表':'sheet','工作流程':'flow','課程專用':'class'};
+
+function parseCSV(text){
+  const lines = text.trim().split('\n');
+  const headers = splitCSVLine(lines[0]);
+  return lines.slice(1).map(l => {
+    const vals = splitCSVLine(l);
+    const obj = {};
+    headers.forEach((h,i) => obj[h.trim()] = (vals[i]||'').trim());
+    return obj;
+  });
+}
+
+function splitCSVLine(line){
+  const result=[]; let cur=''; let inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){inQ=!inQ;}
+    else if(c===','&&!inQ){result.push(cur);cur='';}
+    else{cur+=c;}
+  }
+  result.push(cur);
+  return result;
+}
+
+function applyTheme(rows){
+  const map={};
+  rows.forEach(r=>{ if(r['設定項目']&&r['值']) map[r['設定項目']]=r['值']; });
+  const setVar=(name,key)=>{ if(map[key]) document.documentElement.style.setProperty(name,map[key]); };
+  setVar('--bg','背景色');
+  setVar('--bg2','卡片色');
+  setVar('--bg2','導覽列背景');
+  setVar('--bg3','導覽列選中色');
+  setVar('--text','主文字色');
+  setVar('--text-muted','次文字色');
+  setVar('--c-ai','AI入口主色');
+  setVar('--c-flow','工作流程主色');
+  setVar('--c-class','課程專用主色');
+  setVar('--c-sheet','試算表主色');
+  setVar('--radius','圓角大小');
+}
+
+function buildUI(tools){
+  const main = document.getElementById('main');
+  const tabBar = document.getElementById('tabBar');
+  main.innerHTML='';
+  tabBar.innerHTML='';
+
+  // filter visible only, sort
+  const visible = tools
+    .filter(t => t['顯示']==='✓' && t['名稱'] && !t['名稱'].startsWith('←'))
+    .sort((a,b)=> parseInt(a['排序']||99)-parseInt(b['排序']||99));
+
+  // group by 分頁 → 區塊
+  const pages={};
+  PAGE_ORDER.forEach(p=>pages[p]=[]);
+  visible.forEach(t=>{
+    const pg=t['分頁']||'AI入口';
+    if(!pages[pg]) pages[pg]=[];
+    pages[pg].push(t);
+  });
+
+  // build tabs
+  let firstActive=true;
+  PAGE_ORDER.forEach(pg=>{
+    if(!pages[pg]||pages[pg].length===0) return;
+    const btn=document.createElement('button');
+    btn.className='tab'+(firstActive?' active':'');
+    btn.dataset.page=pg;
+    btn.innerHTML=`<span class="dot"></span>${PAGE_EMOJI[pg]||''} ${pg}`;
+    btn.onclick=()=>switchPage(pg);
+    tabBar.appendChild(btn);
+    firstActive=false;
+  });
+
+  // build pages
+  PAGE_ORDER.forEach(pg=>{
+    if(!pages[pg]||pages[pg].length===0) return;
+    const pageEl=document.createElement('div');
+    pageEl.className='page'+(PAGE_ORDER.indexOf(pg)===0?' active':'');
+    pageEl.id='page-'+pg;
+
+    // group by 區塊
+    const blocks={};
+    pages[pg].forEach(t=>{
+      const b=t['區塊']||'其他';
+      if(!blocks[b]) blocks[b]=[];
+      blocks[b].push(t);
+    });
+
+    Object.entries(blocks).forEach(([blockName,items])=>{
+      const sec=document.createElement('div');
+      sec.className='section';
+
+      const hdr=document.createElement('div');
+      hdr.className='section-header';
+      const lbl=document.createElement('span');
+      lbl.className='section-label';
+      lbl.style.color = pg==='AI入口'?'var(--c-ai)':
+                        pg==='試算表'?'var(--c-sheet)':
+                        pg==='工作流程'?'var(--c-flow)':'var(--c-class)';
+      lbl.textContent=blockName;
+      hdr.appendChild(lbl);
+      const line=document.createElement('div');
+      line.className='section-line';
+      hdr.appendChild(line);
+      sec.appendChild(hdr);
+
+      // choose grid type: 試算表區塊 → sheet-grid, others → card-grid
+      const isSheet = pg==='試算表' && blockName==='試算表';
+      const grid=document.createElement('div');
+      grid.className=isSheet?'sheet-grid':'card-grid';
+
+      items.forEach(t=>{
+        const url=t['網址']||'#';
+        const isPending=url.includes('請填入');
+        const a=document.createElement('a');
+        a.href=isPending?'#':url;
+        if(!isPending && t['開新分頁']==='✓') a.target='_blank';
+        a.rel='noopener';
+
+        if(isSheet){
+          a.className='sheet-chip';
+          a.innerHTML=`
+            <span class="sheet-icon">${t['圖示(emoji)']||'📄'}</span>
+            <div>
+              <div class="sheet-name">${t['名稱']}${isPending?'<span class="pending">待填</span>':''}</div>
+              ${t['說明']?`<div class="sheet-desc">${t['說明']}</div>`:''}
+            </div>`;
+        } else {
+          a.className=`card ${HOVERED_CLASS[pg]||''}`;
+          a.innerHTML=`
+            <div class="card-icon">${t['圖示(emoji)']||'🔗'}</div>
+            <div class="card-info">
+              <div class="card-name">${t['名稱']}${isPending?'<span class="pending">待填</span>':''}</div>
+              ${t['說明']?`<div class="card-desc">${t['說明']}</div>`:''}
+            </div>`;
+        }
+        if(isPending) a.onclick=e=>e.preventDefault();
+        grid.appendChild(a);
+      });
+
+      sec.appendChild(grid);
+      pageEl.appendChild(sec);
+    });
+
+    main.appendChild(pageEl);
+  });
+
+  document.getElementById('last-update').textContent =
+    '更新：'+new Date().toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+function switchPage(pg){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.page===pg));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+pg));
+}
+
+async function fetchCSV(gid){
+  const res=await fetch(CSV_BASE+gid);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  return res.text();
+}
+
+async function init(){
+  try{
+    const [toolsCSV, themeCSV] = await Promise.all([fetchCSV(TOOLS_GID), fetchCSV(THEME_GID)]);
+    const themeRows = parseCSV(themeCSV);
+    applyTheme(themeRows);
+    const toolRows = parseCSV(toolsCSV);
+    buildUI(toolRows);
+  } catch(e){
+    document.getElementById('loading').innerHTML=
+      `<div style="color:#f87171;font-family:monospace;font-size:12px;">
+        ❌ 無法載入試算表<br><br>
+        <span style="color:#7a7a8c;">請確認試算表已設為「知道連結的人可以檢視」</span><br>
+        <span style="color:#4a4a5a;font-size:10px;margin-top:8px;display:block;">${e.message}</span>
+      </div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
