@@ -30,11 +30,7 @@
       --c-class-bg: rgba(245, 158, 11, 0.08);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg);
@@ -75,10 +71,7 @@
       white-space: nowrap;
     }
 
-    .tab-bar {
-      display: flex;
-      gap: 8px;
-    }
+    .tab-bar { display: flex; gap: 8px; }
 
     .tab {
       flex: none;
@@ -99,12 +92,7 @@
       white-space: nowrap;
     }
 
-    .tab:hover {
-      background: var(--bg3);
-      color: var(--text);
-      transform: translateY(-1px);
-    }
-
+    .tab:hover { background: var(--bg3); color: var(--text); transform: translateY(-1px); }
     .tab.active {
       background: var(--bg3);
       border-color: var(--border-hover);
@@ -113,275 +101,138 @@
     }
 
     .tab .dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       flex-shrink: 0;
       transition: transform 0.2s;
     }
-
-    .tab:hover .dot {
-      transform: scale(1.25);
-    }
-
-    .tab[data-page="AI入口"] .dot {
-      background: var(--c-ai);
-    }
-
-    .tab[data-page="試算表"] .dot {
-      background: var(--c-sheet);
-    }
-
-    .tab[data-page="工作流程"] .dot {
-      background: var(--c-flow);
-    }
-
-    .tab[data-page="課程專用"] .dot {
-      background: var(--c-class);
-    }
+    .tab:hover .dot { transform: scale(1.25); }
+    .tab[data-page="AI入口"] .dot  { background: var(--c-ai); }
+    .tab[data-page="試算表"] .dot  { background: var(--c-sheet); }
+    .tab[data-page="工作流程"] .dot { background: var(--c-flow); }
+    .tab[data-page="課程專用"] .dot { background: var(--c-class); }
 
     /* ── MAIN ── */
-    main {
-      flex: 1;
-      padding: 20px;
-      padding-top: 28px;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
-    }
+    main { flex: 1; padding: 20px; padding-top: 28px; max-width: 900px; width: 100%; margin: 0 auto; }
 
     /* ── PAGE ── */
-    .page {
-      display: none;
-      animation: fadeUp 0.25s ease both;
-    }
-
-    .page.active {
-      display: block;
-    }
-
+    .page { display: none; animation: fadeUp 0.25s ease both; }
+    .page.active { display: block; }
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ── SECTION ── */
-    .section {
-      margin-bottom: 2rem;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
+    .section { margin-bottom: 2rem; }
+    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
     .section-label {
       font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── ICON（共用：圖片或 emoji）── */
+    .icon-wrap {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .icon-wrap img {
+      width: 22px; height: 22px;
+      object-fit: contain;
+      border-radius: 4px;
     }
 
-    .section-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
+    /* ── SHEET ICON（大一點）── */
+    .sheet-icon-wrap {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sheet-icon-wrap img {
+      width: 26px; height: 26px;
+      object-fit: contain;
+      border-radius: 4px;
     }
 
-    /* ── SHEET ROW (big chips) ── */
-    .sheet-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 10px;
-    }
-
+    /* ── SHEET GRID ── */
+    .sheet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .sheet-chip {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       padding: 14px 16px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
+      background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--radius);
-      text-decoration: none;
-      color: var(--text);
-      transition: all 0.15s;
-      cursor: pointer;
+      text-decoration: none; color: var(--text);
+      transition: all 0.15s; cursor: pointer;
     }
-
     .sheet-chip:hover {
       background: var(--c-sheet-bg);
       border-color: rgba(56, 189, 248, 0.35);
       transform: translateY(-1px);
     }
+    .sheet-name { font-size: 14px; font-weight: 500; line-height: 1.35; }
+    .sheet-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
 
-    .sheet-icon {
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .sheet-name {
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.35;
-    }
-
-    .sheet-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    /* ── CARD GRID (medium) ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
-      gap: 10px;
-    }
-
+    /* ── CARD GRID ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
     .card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       padding: 13px 14px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
+      background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--radius);
-      text-decoration: none;
-      color: var(--text);
-      transition: all 0.15s;
-      cursor: pointer;
+      text-decoration: none; color: var(--text);
+      transition: all 0.15s; cursor: pointer;
     }
+    .card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+    .card.ai:hover    { background: var(--c-ai-bg);    border-color: rgba(167, 139, 250, 0.3); }
+    .card.flow:hover  { background: var(--c-flow-bg);  border-color: rgba(52, 211, 153, 0.3); }
+    .card.class:hover { background: var(--c-class-bg); border-color: rgba(245, 158, 11, 0.3); }
+    .card.sheet:hover { background: var(--c-sheet-bg); border-color: rgba(56, 189, 248, 0.3); }
 
-    .card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-1px);
-    }
+    .card-info { flex: 1; min-width: 0; }
+    .card-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .card.ai:hover {
-      background: var(--c-ai-bg);
-      border-color: rgba(167, 139, 250, 0.3);
-    }
-
-    .card.flow:hover {
-      background: var(--c-flow-bg);
-      border-color: rgba(52, 211, 153, 0.3);
-    }
-
-    .card.class:hover {
-      background: var(--c-class-bg);
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .card.sheet:hover {
-      background: var(--c-sheet-bg);
-      border-color: rgba(56, 189, 248, 0.3);
-    }
-
-    .card-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: var(--bg3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .card-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-name {
-      font-size: 14px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* ── LOADING / ERROR ── */
+    /* ── LOADING ── */
     .loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 200px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      color: var(--text-dim);
-      flex-direction: column;
-      gap: 12px;
+      display: flex; align-items: center; justify-content: center;
+      height: 200px; flex-direction: column; gap: 12px;
+      font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim);
     }
-
     .spinner {
-      width: 24px;
-      height: 24px;
+      width: 24px; height: 24px;
       border: 2px solid var(--border);
       border-top-color: var(--c-ai);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── FOOTER ── */
     footer {
-      padding: 12px 20px;
-      border-top: 1px solid var(--border);
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--text-dim);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    #last-update {
-      color: var(--text-dim);
+      padding: 12px 20px; border-top: 1px solid var(--border);
+      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim);
+      display: flex; justify-content: space-between; align-items: center;
     }
 
     /* ── PENDING BADGE ── */
     .pending {
-      display: inline-block;
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-      margin-left: 4px;
-      vertical-align: middle;
+      display: inline-block; font-size: 9px; padding: 2px 6px;
+      border-radius: 4px; background: rgba(245, 158, 11, 0.15); color: #f59e0b;
+      margin-left: 4px; vertical-align: middle;
     }
   </style>
 </head>
 
 <body>
-
   <nav>
     <span class="nav-logo">⬡ AI WS</span>
     <div class="tab-bar" id="tabBar"></div>
@@ -400,21 +251,42 @@
   </footer>
 
   <script>
-    const SHEET_ID = '1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c';
+    const SHEET_ID  = '1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c';
     const TOOLS_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=tools`;
     const THEME_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=theme`;
 
-    const PAGE_EMOJI = { 'AI入口': '🤖', '試算表': '📊', '工作流程': '⚙️', '課程專用': '📚' };
-    const HOVERED_CLASS = { 'AI入口': 'ai', '試算表': 'sheet', '工作流程': 'flow', '課程專用': 'class' };
+    const PAGE_EMOJI    = { 'AI入口':'🤖', '試算表':'📊', '工作流程':'⚙️', '課程專用':'📚' };
+    const HOVERED_CLASS = { 'AI入口':'ai', '試算表':'sheet', '工作流程':'flow', '課程專用':'class' };
+    const PAGE_COLOR    = { 'AI入口':'var(--c-ai)', '試算表':'var(--c-sheet)', '工作流程':'var(--c-flow)', '課程專用':'var(--c-class)' };
 
+    // ── 圖示渲染（三種模式）──
+    // 1. http 開頭 → <img> 直接顯示
+    // 2. 空白      → 自動抓 favicon
+    // 3. 其他      → 當 emoji 顯示
+    function renderIcon(iconVal, url, wrapClass) {
+      const wrap = `class="${wrapClass}"`;
+      if (iconVal && iconVal.startsWith('http')) {
+        return `<div ${wrap}><img src="${iconVal}" alt="" onerror="this.parentElement.textContent='🔗'"></div>`;
+      }
+      if (!iconVal && url && url.startsWith('http')) {
+        try {
+          const domain = new URL(url).hostname;
+          const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+          return `<div ${wrap}><img src="${faviconUrl}" alt="" onerror="this.parentElement.textContent='🔗'"></div>`;
+        } catch(e) {
+          return `<div ${wrap}>🔗</div>`;
+        }
+      }
+      return `<div ${wrap}>${iconVal || '🔗'}</div>`;
+    }
+
+    // ── CSV 解析 ──
     function parseCSV(text) {
       const lines = text.trim().split('\n');
       const rawHeaders = splitCSVLine(lines[0]);
-      // 過濾標頭欄位，只保留空格或箭頭前的核心屬性名稱（例如 "名稱 ← 顯示名稱" -> "名稱"）
       const headers = rawHeaders.map(h => {
         const clean = h.trim();
-        const parts = clean.split(/[\s←]+/);
-        return parts[0] || clean;
+        return clean.split(/[\s←]+/)[0] || clean;
       });
       return lines.slice(1).map(l => {
         const vals = splitCSVLine(l);
@@ -436,56 +308,52 @@
       return result;
     }
 
+    // ── 套用主題 ──
     function applyTheme(rows) {
       const map = {};
       rows.forEach(r => { if (r['設定項目'] && r['值']) map[r['設定項目']] = r['值']; });
       const setVar = (name, key) => { if (map[key]) document.documentElement.style.setProperty(name, map[key]); };
-      setVar('--bg', '背景色');
-      setVar('--bg2', '卡片色');
-      setVar('--nav-bg', '導覽列背景');
-      setVar('--bg3', '導覽列選中色');
-      setVar('--border', '卡片邊框色');
+      setVar('--bg',           '背景色');
+      setVar('--bg2',          '卡片色');
+      setVar('--nav-bg',       '導覽列背景');
+      setVar('--bg3',          '導覽列選中色');
+      setVar('--border',       '卡片邊框色');
       setVar('--border-hover', '邊框懸停色');
-      setVar('--text', '主文字色');
-      setVar('--text-muted', '次文字色');
-      setVar('--text-dim', '輔助文字色');
-      setVar('--c-ai', 'AI入口主色');
-      setVar('--c-flow', '工作流程主色');
-      setVar('--c-class', '課程專用主色');
-      setVar('--c-sheet', '試算表主色');
-      setVar('--radius', '圓角大小');
+      setVar('--text',         '主文字色');
+      setVar('--text-muted',   '次文字色');
+      setVar('--text-dim',     '輔助文字色');
+      setVar('--c-ai',         'AI入口主色');
+      setVar('--c-flow',       '工作流程主色');
+      setVar('--c-class',      '課程專用主色');
+      setVar('--c-sheet',      '試算表主色');
+      setVar('--radius',       '圓角大小');
     }
 
+    // ── 建立 UI ──
     function buildUI(tools) {
-      const main = document.getElementById('main');
+      const main   = document.getElementById('main');
       const tabBar = document.getElementById('tabBar');
       main.innerHTML = '';
       tabBar.innerHTML = '';
 
-      // filter visible only, sort by 排序
       const visible = tools
         .filter(t => t['顯示'] === '✓' && t['名稱'] && !t['名稱'].startsWith('←'))
         .sort((a, b) => parseInt(a['排序'] || 99) - parseInt(b['排序'] || 99));
 
-      // 動態取得分頁順序：依試算表中第一次出現的順序
       const pageOrder = [];
       visible.forEach(t => {
         const pg = t['分頁'] || 'AI入口';
         if (!pageOrder.includes(pg)) pageOrder.push(pg);
       });
 
-      // group by 分頁 → 區塊
       const pages = {};
       pageOrder.forEach(p => pages[p] = []);
-      visible.forEach(t => {
-        const pg = t['分頁'] || 'AI入口';
-        pages[pg].push(t);
-      });
+      visible.forEach(t => pages[t['分頁'] || 'AI入口'].push(t));
 
-      // build tabs
+      // 建立 Tab
       let firstActive = true;
       pageOrder.forEach(pg => {
-        if (!pages[pg] || pages[pg].length === 0) return;
+        if (!pages[pg]?.length) return;
         const btn = document.createElement('button');
         btn.className = 'tab' + (firstActive ? ' active' : '');
         btn.dataset.page = pg;
@@ -495,14 +363,13 @@
         firstActive = false;
       });
 
-      // build pages
+      // 建立分頁內容
       pageOrder.forEach(pg => {
-        if (!pages[pg] || pages[pg].length === 0) return;
+        if (!pages[pg]?.length) return;
         const pageEl = document.createElement('div');
         pageEl.className = 'page' + (pageOrder.indexOf(pg) === 0 ? ' active' : '');
         pageEl.id = 'page-' + pg;
 
-        // group by 區塊
         const blocks = {};
         pages[pg].forEach(t => {
           const b = t['區塊'] || '其他';
@@ -518,16 +385,12 @@
           hdr.className = 'section-header';
           const lbl = document.createElement('span');
           lbl.className = 'section-label';
-          const PAGE_COLOR = { 'AI入口': 'var(--c-ai)', '試算表': 'var(--c-sheet)', '工作流程': 'var(--c-flow)', '課程專用': 'var(--c-class)' };
           lbl.style.color = PAGE_COLOR[pg] || 'var(--c-ai)';
           lbl.textContent = blockName;
           hdr.appendChild(lbl);
-          const line = document.createElement('div');
-          line.className = 'section-line';
-          hdr.appendChild(line);
+          hdr.appendChild(Object.assign(document.createElement('div'), { className: 'section-line' }));
           sec.appendChild(hdr);
 
-          // choose grid type: 試算表區塊 → sheet-grid, others → card-grid
           const isSheet = pg === '試算表' && blockName === '試算表';
           const grid = document.createElement('div');
           grid.className = isSheet ? 'sheet-grid' : 'card-grid';
@@ -535,29 +398,32 @@
           items.forEach(t => {
             const url = t['網址'] || '#';
             const isPending = url.includes('請填入');
+            const iconVal = t['圖示(emoji)'] || '';
             const a = document.createElement('a');
             a.href = isPending ? '#' : url;
             if (!isPending && t['開新分頁'] === '✓') a.target = '_blank';
             a.rel = 'noopener';
+            if (isPending) a.onclick = e => e.preventDefault();
+
+            const pendingBadge = isPending ? '<span class="pending">待填</span>' : '';
 
             if (isSheet) {
               a.className = 'sheet-chip';
               a.innerHTML = `
-            <span class="sheet-icon">${t['圖示(emoji)'] || '📄'}</span>
-            <div>
-              <div class="sheet-name">${t['名稱']}${isPending ? '<span class="pending">待填</span>' : ''}</div>
-              ${t['說明'] ? `<div class="sheet-desc">${t['說明']}</div>` : ''}
-            </div>`;
+                ${renderIcon(iconVal, url, 'sheet-icon-wrap')}
+                <div>
+                  <div class="sheet-name">${t['名稱']}${pendingBadge}</div>
+                  ${t['說明'] ? `<div class="sheet-desc">${t['說明']}</div>` : ''}
+                </div>`;
             } else {
               a.className = `card ${HOVERED_CLASS[pg] || ''}`;
               a.innerHTML = `
-            <div class="card-icon">${t['圖示(emoji)'] || '🔗'}</div>
-            <div class="card-info">
-              <div class="card-name">${t['名稱']}${isPending ? '<span class="pending">待填</span>' : ''}</div>
-              ${t['說明'] ? `<div class="card-desc">${t['說明']}</div>` : ''}
-            </div>`;
+                ${renderIcon(iconVal, url, 'icon-wrap')}
+                <div class="card-info">
+                  <div class="card-name">${t['名稱']}${pendingBadge}</div>
+                  ${t['說明'] ? `<div class="card-desc">${t['說明']}</div>` : ''}
+                </div>`;
             }
-            if (isPending) a.onclick = e => e.preventDefault();
             grid.appendChild(a);
           });
 
@@ -572,28 +438,28 @@
         '更新：' + new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
     }
 
+    // ── 切換分頁 ──
     function switchPage(pg) {
       document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.page === pg));
       document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + pg));
     }
 
+    // ── 初始化 ──
     async function init() {
       try {
         const [toolsText, themeText] = await Promise.all([
           fetch(TOOLS_CSV).then(r => r.text()),
           fetch(THEME_CSV).then(r => r.text())
         ]);
-        const themeRows = parseCSV(themeText);
-        applyTheme(themeRows);
-        const toolRows = parseCSV(toolsText);
-        buildUI(toolRows);
+        applyTheme(parseCSV(themeText));
+        buildUI(parseCSV(toolsText));
       } catch (e) {
         document.getElementById('loading').innerHTML =
           `<div style="color:#f87171;font-family:monospace;font-size:12px;">
-        ❌ 無法載入試算表<br><br>
-        <span style="color:#7a7a8c;">請確認試算表已設為「知道連結的人可以檢視」</span><br>
-        <span style="color:#4a4a5a;font-size:10px;margin-top:8px;display:block;">${e.message}</span>
-      </div>`;
+            ❌ 無法載入試算表<br><br>
+            <span style="color:#7a7a8c;">請確認試算表已設為「知道連結的人可以檢視」</span><br>
+            <span style="color:#4a4a5a;font-size:10px;margin-top:8px;display:block;">${e.message}</span>
+          </div>`;
       }
     }
 
@@ -601,31 +467,18 @@
 
     // ── 鍵盤快捷鍵 ──
     document.addEventListener('keydown', e => {
-      // 焦點在輸入框時不攔截
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
       const tabs = [...document.querySelectorAll('.tab')];
-      if (tabs.length === 0) return;
-
-      const currentIndex = tabs.findIndex(t => t.classList.contains('active'));
-
-      // 數字鍵 1-9：直接跳到對應分頁
+      if (!tabs.length) return;
+      const cur = tabs.findIndex(t => t.classList.contains('active'));
       if (e.key >= '1' && e.key <= '9') {
-        const idx = parseInt(e.key) - 1;
-        if (tabs[idx]) switchPage(tabs[idx].dataset.page);
+        const t = tabs[parseInt(e.key) - 1];
+        if (t) switchPage(t.dataset.page);
         return;
       }
-
-      // 左右方向鍵：前後循環切換
-      if (e.key === 'ArrowRight') {
-        const next = tabs[(currentIndex + 1) % tabs.length];
-        switchPage(next.dataset.page);
-      } else if (e.key === 'ArrowLeft') {
-        const prev = tabs[(currentIndex - 1 + tabs.length) % tabs.length];
-        switchPage(prev.dataset.page);
-      }
+      if (e.key === 'ArrowRight') switchPage(tabs[(cur + 1) % tabs.length].dataset.page);
+      if (e.key === 'ArrowLeft')  switchPage(tabs[(cur - 1 + tabs.length) % tabs.length].dataset.page);
     });
   </script>
 </body>
-
 </html>
