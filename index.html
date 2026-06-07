@@ -223,6 +223,28 @@
       display: flex; justify-content: space-between; align-items: center;
     }
 
+    /* ── EDIT BUTTON ── */
+    .edit-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .edit-btn:hover {
+      background: var(--bg3);
+      border-color: var(--border-hover);
+      color: var(--text-muted);
+    }
+
     /* ── PENDING BADGE ── */
     .pending {
       display: inline-block; font-size: 9px; padding: 2px 6px;
@@ -236,6 +258,7 @@
   <nav>
     <span class="nav-logo">⬡ AI WS</span>
     <div class="tab-bar" id="tabBar"></div>
+    <a class="edit-btn" href="https://docs.google.com/spreadsheets/d/1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c/edit" target="_blank" rel="noopener" title="編輯試算表">✏️ 編輯</a>
   </nav>
 
   <main id="main">
