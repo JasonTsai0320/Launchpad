@@ -8,23 +8,41 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f11;
-      --bg2: #16161a;
-      --bg3: #1e1e24;
-      --border: rgba(255,255,255,0.07);
-      --border-hover: rgba(255,255,255,0.18);
-      --text: #e8e8f0;
-      --text-muted: #7a7a8c;
-      --text-dim: #4a4a5a;
+      --bg: #fefcf9;
+      --bg2: #f5f0e8;
+      --bg3: #ede6d6;
+      --nav-bg: rgba(245,240,232,0.8);
+      --border: rgba(45,36,23,0.08);
+      --border-hover: rgba(45,36,23,0.18);
+      --text: #2d2417;
+      --text-muted: #8a7660;
+      --text-dim: #b8a898;
       --radius: 10px;
-      --c-ai: #a78bfa;
-      --c-sheet: #38bdf8;
-      --c-flow: #34d399;
-      --c-class: #f59e0b;
-      --c-ai-bg: rgba(167,139,250,0.08);
-      --c-sheet-bg: rgba(56,189,248,0.08);
-      --c-flow-bg: rgba(52,211,153,0.08);
-      --c-class-bg: rgba(245,158,11,0.08);
+
+      /* 四大暖陽主色 */
+      --c-ai: #c0553a;        /* 磚紅 */
+      --c-sheet: #5b7fa6;     /* 藍灰石板 */
+      --c-flow: #6a8c69;      /* 橄欖綠鼠尾草 */
+      --c-class: #c48a2e;     /* 蜂蜜琥珀 */
+
+      /* 動態透明背景與邊框 (以 color-mix 自動調和) */
+      --c-ai-bg: color-mix(in srgb, var(--c-ai) 8%, transparent);
+      --c-sheet-bg: color-mix(in srgb, var(--c-sheet) 8%, transparent);
+      --c-flow-bg: color-mix(in srgb, var(--c-flow) 8%, transparent);
+      --c-class-bg: color-mix(in srgb, var(--c-class) 8%, transparent);
+
+      /* 專案與備課主從層配色 */
+      --layer-flow-bg: color-mix(in srgb, var(--c-flow) 6%, transparent);
+      --layer-flow-border: color-mix(in srgb, var(--c-flow) 20%, transparent);
+      --layer-flow-bar: color-mix(in srgb, var(--c-flow) 35%, transparent);
+
+      --layer-class-bg: color-mix(in srgb, var(--c-class) 6%, transparent);
+      --layer-class-border: color-mix(in srgb, var(--c-class) 20%, transparent);
+      --layer-class-bar: color-mix(in srgb, var(--c-class) 35%, transparent);
+
+      /* 精緻柔和陰影 */
+      --shadow-nav: 0 8px 30px 0 rgba(45, 36, 23, 0.05);
+      --shadow-card: 0 4px 12px rgba(45, 36, 23, 0.02);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,7 +74,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+      box-shadow: var(--shadow-nav);
     }
 
     .nav-logo {
@@ -93,7 +111,7 @@
       background: var(--bg3);
       border-color: var(--border-hover);
       color: var(--text);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow-card);
     }
     .tab .dot {
       width: 8px; height: 8px;
@@ -179,13 +197,14 @@
       border-radius: var(--radius);
       text-decoration: none; color: var(--text);
       transition: all 0.2s ease; cursor: pointer;
-      filter: brightness(0.75);
+      opacity: 0.9;
     }
     .sheet-chip:hover {
       background: var(--c-sheet-bg);
-      border-color: rgba(56,189,248,0.35);
+      border-color: color-mix(in srgb, var(--c-sheet) 25%, transparent);
       transform: translateY(-1px);
-      filter: brightness(1.05);
+      opacity: 1;
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--c-sheet) 10%, transparent);
     }
     .sheet-name { font-size: 14px; font-weight: 500; line-height: 1.35; }
     .sheet-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
@@ -199,17 +218,17 @@
       border-radius: var(--radius);
       text-decoration: none; color: var(--text);
       transition: all 0.2s ease; cursor: pointer;
-      filter: brightness(0.75);
+      opacity: 0.9;
     }
     .card:hover {
       border-color: var(--border-hover);
       transform: translateY(-1px);
-      filter: brightness(1.05);
+      opacity: 1;
     }
-    .card.ai:hover    { background: var(--c-ai-bg);    border-color: rgba(167,139,250,0.3); }
-    .card.flow:hover  { background: var(--c-flow-bg);  border-color: rgba(52,211,153,0.3); }
-    .card.class:hover { background: var(--c-class-bg); border-color: rgba(245,158,11,0.3); }
-    .card.sheet:hover { background: var(--c-sheet-bg); border-color: rgba(56,189,248,0.3); }
+    .card.ai:hover    { background: var(--c-ai-bg);    border-color: color-mix(in srgb, var(--c-ai) 25%, transparent); box-shadow: 0 4px 12px color-mix(in srgb, var(--c-ai) 10%, transparent); }
+    .card.flow:hover  { background: var(--c-flow-bg);  border-color: color-mix(in srgb, var(--c-flow) 25%, transparent); box-shadow: 0 4px 12px color-mix(in srgb, var(--c-flow) 10%, transparent); }
+    .card.class:hover { background: var(--c-class-bg); border-color: color-mix(in srgb, var(--c-class) 25%, transparent); box-shadow: 0 4px 12px color-mix(in srgb, var(--c-class) 10%, transparent); }
+    .card.sheet:hover { background: var(--c-sheet-bg); border-color: color-mix(in srgb, var(--c-sheet) 25%, transparent); box-shadow: 0 4px 12px color-mix(in srgb, var(--c-sheet) 10%, transparent); }
 
     .card-info { flex: 1; min-width: 0; }
     .card-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -304,8 +323,8 @@
     const HOVERED_CLASS = { '01-工作站':'ai', '02-專案中':'flow', '03-備課站':'class' };
     const PAGE_COLOR    = { '01-工作站':'var(--c-ai)', '02-專案中':'var(--c-flow)', '03-備課站':'var(--c-class)' };
     const LAYER_COLORS  = {
-      '02-專案中': { bg: 'rgba(52,211,153,0.10)',  border: 'rgba(52,211,153,0.25)',  bar: 'rgba(52,211,153,0.35)' },
-      '03-備課站': { bg: 'rgba(245,158,11,0.10)',   border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
+      '02-專案中': { bg: 'var(--layer-flow-bg)',  border: 'var(--layer-flow-border)',  bar: 'var(--layer-flow-bar)' },
+      '03-備課站': { bg: 'var(--layer-class-bg)', border: 'var(--layer-class-border)', bar: 'var(--layer-class-bar)' },
     };
 
     // ── 圖示渲染 ──
