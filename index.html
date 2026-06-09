@@ -618,17 +618,17 @@
     init();
 
     // ── 鍵盤快捷鍵 ──
+    // keydown：攔截 Ctrl+字母 防止瀏覽器預設行為；處理分頁切換
+    let activeKeys = {};
+
     document.addEventListener('keydown', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      activeKeys[e.key.toUpperCase()] = true;
 
-      // Ctrl + 字母 → 開啟對應工具
+      // Ctrl+字母：只做 preventDefault，實際開啟在 keyup
       if (e.ctrlKey && !e.metaKey && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
-        const letter = e.key.toUpperCase();
-        const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
-        if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
-          e.preventDefault();
-          window.open(tool['網址'], '_blank', 'noopener,noreferrer');
-          }
+        e.preventDefault();
+        return;
       }
 
       // 數字鍵 1-9：切換分頁
@@ -643,6 +643,21 @@
       // 左右方向鍵：循環切換
       if (e.key === 'ArrowRight') switchPage(tabs[(cur + 1) % tabs.length].dataset.page);
       if (e.key === 'ArrowLeft')  switchPage(tabs[(cur - 1 + tabs.length) % tabs.length].dataset.page);
+    });
+
+    // keyup：Ctrl+字母 在放開時才執行開啟，避免側欄攔截
+    document.addEventListener('keyup', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key.length === 1 && /[a-zA-Z]/.test(e.key) && (e.ctrlKey || activeKeys['CONTROL'])) {
+        const letter = e.key.toUpperCase();
+        const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
+        if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
+          window.open(tool['網址'], '_blank', 'noopener,noreferrer');
+        }
+      }
+
+      activeKeys = {};
     });
   </script>
 </body>
