@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 工作台</title>
+  <title>Launchpad</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f0f11;
       --bg2: #16161a;
       --bg3: #1e1e24;
-      --border: rgba(255, 255, 255, 0.07);
-      --border-hover: rgba(255, 255, 255, 0.18);
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.18);
       --text: #e8e8f0;
       --text-muted: #7a7a8c;
       --text-dim: #4a4a5a;
@@ -24,10 +21,10 @@
       --c-sheet: #38bdf8;
       --c-flow: #34d399;
       --c-class: #f59e0b;
-      --c-ai-bg: rgba(167, 139, 250, 0.08);
-      --c-sheet-bg: rgba(56, 189, 248, 0.08);
-      --c-flow-bg: rgba(52, 211, 153, 0.08);
-      --c-class-bg: rgba(245, 158, 11, 0.08);
+      --c-ai-bg: rgba(167,139,250,0.08);
+      --c-sheet-bg: rgba(56,189,248,0.08);
+      --c-flow-bg: rgba(52,211,153,0.08);
+      --c-class-bg: rgba(245,158,11,0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,7 +43,7 @@
       position: sticky;
       top: 12px;
       z-index: 100;
-      background: var(--nav-bg, rgba(22, 22, 26, 0.75));
+      background: var(--nav-bg, rgba(22,22,26,0.75));
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
@@ -59,7 +56,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
     }
 
     .nav-logo {
@@ -84,22 +81,20 @@
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       white-space: nowrap;
     }
-
     .tab:hover { background: var(--bg3); color: var(--text); transform: translateY(-1px); }
     .tab.active {
       background: var(--bg3);
       border-color: var(--border-hover);
       color: var(--text);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-
     .tab .dot {
       width: 8px; height: 8px;
       border-radius: 50%;
@@ -107,160 +102,9 @@
       transition: transform 0.2s;
     }
     .tab:hover .dot { transform: scale(1.25); }
-    .tab[data-page="AI入口"] .dot  { background: var(--c-ai); }
-    .tab[data-page="試算表"] .dot  { background: var(--c-sheet); }
-    .tab[data-page="工作流程"] .dot { background: var(--c-flow); }
-    .tab[data-page="課程專用"] .dot { background: var(--c-class); }
-
-    /* ── MAIN ── */
-    main { flex: 1; padding: 20px; padding-top: 28px; max-width: 900px; width: 100%; margin: 0 auto; }
-
-    /* ── PAGE ── */
-    .page { display: none; animation: fadeUp 0.25s ease both; }
-    .page.active { display: block; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── SECTION ── */
-    .section { margin-bottom: 2rem; }
-    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.12em; text-transform: uppercase;
-    }
-    .section-line { flex: 1; height: 1px; background: var(--border); }
-
-    /* ── ICON（共用：圖片或 emoji）── */
-    .icon-wrap {
-      width: 36px; height: 36px;
-      border-radius: 8px;
-      background: var(--bg3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-      overflow: hidden;
-    }
-    .icon-wrap img {
-      width: 22px; height: 22px;
-      object-fit: contain;
-      border-radius: 4px;
-    }
-
-    /* ── SHEET ICON（大一點）── */
-    .sheet-icon-wrap {
-      width: 36px; height: 36px;
-      border-radius: 8px;
-      background: var(--bg3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
-      overflow: hidden;
-    }
-    .sheet-icon-wrap img {
-      width: 26px; height: 26px;
-      object-fit: contain;
-      border-radius: 4px;
-    }
-
-    /* ── SHEET GRID ── */
-    .sheet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .sheet-chip {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--radius);
-      text-decoration: none; color: var(--text);
-      transition: all 0.2s ease; cursor: pointer;
-      filter: brightness(0.75);
-    }
-    .sheet-chip:hover {
-      background: var(--c-sheet-bg);
-      border-color: rgba(56, 189, 248, 0.35);
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-    .sheet-name { font-size: 14px; font-weight: 500; line-height: 1.35; }
-    .sheet-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-
-    /* ── PRIMARY CARD（主層加重底色）── */
-    .section.is-primary .card {
-      background: var(--primary-card-bg, var(--bg2));
-      border-color: var(--primary-card-border, var(--border));
-    }
-
-    /* ── SUB SECTION（子層：檔案/資料）── */
-    .section.is-sub {
-      margin-left: 12px;
-      padding-left: 14px;
-      border-left: 2px solid var(--sub-bar-color, rgba(167,139,250,0.35));
-    }
-    .section.is-sub .section-label {
-      font-size: 9px;
-      opacity: 0.65;
-    }
-    .section.is-sub .card-grid {
-      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-    }
-    .section.is-sub .card {
-      padding: 9px 11px;
-      opacity: 0.75;
-      background: var(--bg2);
-    }
-    .section.is-sub .card:hover { opacity: 1; }
-    .section.is-sub .icon-wrap {
-      width: 28px; height: 28px; font-size: 14px;
-    }
-    .section.is-sub .icon-wrap img { width: 16px; height: 16px; }
-    .section.is-sub .card-name { font-size: 12px; }
-    .section.is-sub .card-desc { font-size: 11px; }
-
-    /* ── CARD GRID ── */
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 10px; }
-    .card {
-      display: flex; align-items: center; gap: 12px;
-      padding: 13px 14px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: var(--radius);
-      text-decoration: none; color: var(--text);
-      transition: all 0.2s ease; cursor: pointer;
-      filter: brightness(0.75);
-    }
-    .card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-    .card.ai:hover    { background: var(--c-ai-bg);    border-color: rgba(167, 139, 250, 0.3); }
-    .card.flow:hover  { background: var(--c-flow-bg);  border-color: rgba(52, 211, 153, 0.3); }
-    .card.class:hover { background: var(--c-class-bg); border-color: rgba(245, 158, 11, 0.3); }
-    .card.sheet:hover { background: var(--c-sheet-bg); border-color: rgba(56, 189, 248, 0.3); }
-
-    .card-info { flex: 1; min-width: 0; }
-    .card-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* ── LOADING ── */
-    .loading {
-      display: flex; align-items: center; justify-content: center;
-      height: 200px; flex-direction: column; gap: 12px;
-      font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim);
-    }
-    .spinner {
-      width: 24px; height: 24px;
-      border: 2px solid var(--border);
-      border-top-color: var(--c-ai);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 12px 20px; border-top: 1px solid var(--border);
-      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim);
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    .tab[data-page="01-工作站"] .dot { background: var(--c-ai); }
+    .tab[data-page="02-專案中"] .dot { background: var(--c-flow); }
+    .tab[data-page="03-備課站"] .dot { background: var(--c-class); }
 
     /* ── EDIT BUTTON ── */
     .edit-btn {
@@ -284,20 +128,154 @@
       color: var(--text-muted);
     }
 
-    /* ── PENDING BADGE ── */
+    /* ── MAIN ── */
+    main { flex: 1; padding: 20px; padding-top: 28px; max-width: 900px; width: 100%; margin: 0 auto; }
+
+    /* ── PAGE ── */
+    .page { display: none; animation: fadeUp 0.25s ease both; }
+    .page.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 2rem; }
+    .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* ── ICON ── */
+    .icon-wrap {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .icon-wrap img { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
+
+    .sheet-icon-wrap {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sheet-icon-wrap img { width: 26px; height: 26px; object-fit: contain; border-radius: 4px; }
+
+    /* ── SHEET GRID ── */
+    .sheet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 10px; }
+    .sheet-chip {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none; color: var(--text);
+      transition: all 0.2s ease; cursor: pointer;
+      filter: brightness(0.75);
+    }
+    .sheet-chip:hover {
+      background: var(--c-sheet-bg);
+      border-color: rgba(56,189,248,0.35);
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+    .sheet-name { font-size: 14px; font-weight: 500; line-height: 1.35; }
+    .sheet-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── CARD GRID ── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px,1fr)); gap: 10px; }
+    .card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 14px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none; color: var(--text);
+      transition: all 0.2s ease; cursor: pointer;
+      filter: brightness(0.75);
+    }
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+    .card.ai:hover    { background: var(--c-ai-bg);    border-color: rgba(167,139,250,0.3); }
+    .card.flow:hover  { background: var(--c-flow-bg);  border-color: rgba(52,211,153,0.3); }
+    .card.class:hover { background: var(--c-class-bg); border-color: rgba(245,158,11,0.3); }
+    .card.sheet:hover { background: var(--c-sheet-bg); border-color: rgba(56,189,248,0.3); }
+
+    .card-info { flex: 1; min-width: 0; }
+    .card-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ── PRIMARY 主層（02、03 專用）── */
+    .section.is-primary .card {
+      background: var(--primary-card-bg, var(--bg2));
+      border-color: var(--primary-card-border, var(--border));
+    }
+
+    /* ── SUB 子層（02、03 專用）── */
+    .section.is-sub {
+      margin-left: 12px;
+      padding-left: 14px;
+      border-left: 2px solid var(--sub-bar-color, rgba(167,139,250,0.35));
+    }
+    .section.is-sub .section-label { font-size: 9px; opacity: 0.65; }
+    .section.is-sub .card-grid { grid-template-columns: repeat(auto-fill, minmax(135px,1fr)); }
+    .section.is-sub .card { padding: 9px 11px; opacity: 0.75; }
+    .section.is-sub .card:hover { opacity: 1; }
+    .section.is-sub .icon-wrap { width: 28px; height: 28px; font-size: 14px; }
+    .section.is-sub .icon-wrap img { width: 16px; height: 16px; }
+    .section.is-sub .card-name { font-size: 12px; }
+    .section.is-sub .card-desc { font-size: 11px; }
+
+    /* ── LOADING ── */
+    .loading {
+      display: flex; align-items: center; justify-content: center;
+      height: 200px; flex-direction: column; gap: 12px;
+      font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim);
+    }
+    .spinner {
+      width: 24px; height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--c-ai);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; color: var(--text-dim);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    /* ── PENDING ── */
     .pending {
       display: inline-block; font-size: 9px; padding: 2px 6px;
-      border-radius: 4px; background: rgba(245, 158, 11, 0.15); color: #f59e0b;
+      border-radius: 4px; background: rgba(245,158,11,0.15); color: #f59e0b;
       margin-left: 4px; vertical-align: middle;
     }
   </style>
 </head>
-
 <body>
+
   <nav>
-    <span class="nav-logo">⬡ AI WorkSpace</span>
+    <span class="nav-logo">⬡ Launchpad</span>
     <div class="tab-bar" id="tabBar"></div>
-    <a class="edit-btn" href="https://docs.google.com/spreadsheets/d/1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c/edit" target="_blank" rel="noopener" title="編輯試算表">✏️ 編輯</a>
+    <a class="edit-btn"
+       href="https://docs.google.com/spreadsheets/d/1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c/edit"
+       target="_blank" rel="noopener">✏️ 編輯</a>
   </nav>
 
   <main id="main">
@@ -308,50 +286,47 @@
   </main>
 
   <footer>
-    <span>⬡ AI Workspace · 個人版</span>
+    <span>⬡ Launchpad · 個人版</span>
     <span id="last-update"></span>
   </footer>
 
   <script>
+    // ── 設定 ──
     const SHEET_ID  = '1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c';
     const TOOLS_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=tools`;
     const THEME_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=theme`;
 
-    let allTools = [];  // 全域：供快捷鍵使用
+    // ── 全域變數 ──
+    let allTools = [];
 
-    const PAGE_EMOJI    = { 'AI入口':'🤖', '試算表':'📊', '工作流程':'⚙️', '課程專用':'📚' };
-    const HOVERED_CLASS = { 'AI入口':'ai', '試算表':'sheet', '工作流程':'flow', '課程專用':'class' };
-    const PAGE_COLOR    = { 'AI入口':'var(--c-ai)', '試算表':'var(--c-sheet)', '工作流程':'var(--c-flow)', '課程專用':'var(--c-class)' };
+    // ── 常數 ──
+    const PAGE_EMOJI    = { '01-工作站':'🛠️', '02-專案中':'📁', '03-備課站':'📚' };
+    const HOVERED_CLASS = { '01-工作站':'ai', '02-專案中':'flow', '03-備課站':'class' };
+    const PAGE_COLOR    = { '01-工作站':'var(--c-ai)', '02-專案中':'var(--c-flow)', '03-備課站':'var(--c-class)' };
+    const LAYER_COLORS  = {
+      '02-專案中': { bg: 'rgba(52,211,153,0.10)',  border: 'rgba(52,211,153,0.25)',  bar: 'rgba(52,211,153,0.35)' },
+      '03-備課站': { bg: 'rgba(245,158,11,0.10)',   border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
+    };
 
-    // ── 圖示渲染（三種模式）──
-    // 1. http 開頭 → <img> 直接顯示
-    // 2. 空白      → 自動抓 favicon
-    // 3. 其他      → 當 emoji 顯示
+    // ── 圖示渲染 ──
     function renderIcon(iconVal, url, wrapClass) {
-      const wrap = `class="${wrapClass}"`;
+      const w = `class="${wrapClass}"`;
       if (iconVal && iconVal.startsWith('http')) {
-        return `<div ${wrap}><img src="${iconVal}" alt="" onerror="this.parentElement.textContent='🔗'"></div>`;
+        return `<div ${w}><img src="${iconVal}" alt="" onerror="this.parentElement.textContent='🔗'"></div>`;
       }
       if (!iconVal && url && url.startsWith('http')) {
         try {
           const domain = new URL(url).hostname;
-          const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-          return `<div ${wrap}><img src="${faviconUrl}" alt="" onerror="this.parentElement.textContent='🔗'"></div>`;
-        } catch(e) {
-          return `<div ${wrap}>🔗</div>`;
-        }
+          return `<div ${w}><img src="https://www.google.com/s2/favicons?domain=${domain}&sz=32" alt="" onerror="this.parentElement.textContent='🔗'"></div>`;
+        } catch(e) { return `<div ${w}>🔗</div>`; }
       }
-      return `<div ${wrap}>${iconVal || '🔗'}</div>`;
+      return `<div ${w}>${iconVal || '🔗'}</div>`;
     }
 
     // ── CSV 解析 ──
     function parseCSV(text) {
       const lines = text.trim().split('\n');
-      const rawHeaders = splitCSVLine(lines[0]);
-      const headers = rawHeaders.map(h => {
-        const clean = h.trim();
-        return clean.split(/[\s←]+/)[0] || clean;
-      });
+      const headers = splitCSVLine(lines[0]).map(h => h.trim().split(/[\s←]+/)[0] || h.trim());
       return lines.slice(1).map(l => {
         const vals = splitCSVLine(l);
         const obj = {};
@@ -376,78 +351,78 @@
     function applyTheme(rows) {
       const map = {};
       rows.forEach(r => { if (r['設定項目'] && r['值']) map[r['設定項目']] = r['值']; });
-      const setVar = (name, key) => { if (map[key]) document.documentElement.style.setProperty(name, map[key]); };
-      setVar('--bg',           '背景色');
-      setVar('--bg2',          '卡片色');
-      setVar('--nav-bg',       '導覽列背景');
-      setVar('--bg3',          '導覽列選中色');
-      setVar('--border',       '卡片邊框色');
-      setVar('--border-hover', '邊框懸停色');
-      setVar('--text',         '主文字色');
-      setVar('--text-muted',   '次文字色');
-      setVar('--text-dim',     '輔助文字色');
-      setVar('--c-ai',         'AI入口主色');
-      setVar('--c-flow',       '工作流程主色');
-      setVar('--c-class',      '課程專用主色');
-      setVar('--c-sheet',      '試算表主色');
-      setVar('--radius',       '圓角大小');
+      const set = (v, k) => { if (map[k]) document.documentElement.style.setProperty(v, map[k]); };
+      set('--bg',           '背景色');
+      set('--bg2',          '卡片色');
+      set('--nav-bg',       '導覽列背景');
+      set('--bg3',          '導覽列選中色');
+      set('--border',       '卡片邊框色');
+      set('--border-hover', '邊框懸停色');
+      set('--text',         '主文字色');
+      set('--text-muted',   '次文字色');
+      set('--text-dim',     '輔助文字色');
+      set('--c-ai',         'AI入口主色');
+      set('--c-flow',       '工作流程主色');
+      set('--c-class',      '課程專用主色');
+      set('--c-sheet',      '試算表主色');
+      set('--radius',       '圓角大小');
     }
 
     // ── 快捷鍵衝突檢查 ──
     function checkShortcutConflicts(tools) {
       const seen = {};
-      const duplicates = [];
+      const dups = [];
       tools.forEach(t => {
         const k = (t['快捷鍵'] || '').trim().toUpperCase();
-        if (!k || k.length !== 1 || !k.match(/[A-Z]/)) return;
-        if (seen[k]) {
-          if (!duplicates.includes(k)) duplicates.push(k);
-        } else {
-          seen[k] = t['名稱'] || '';
-        }
+        if (!k || k.length !== 1 || !/[A-Z]/.test(k)) return;
+        if (seen[k]) { if (!dups.includes(k)) dups.push(k); }
+        else { seen[k] = t['名稱'] || ''; }
       });
-      if (duplicates.length > 0) {
-        const lines = duplicates.map(k => {
+      if (dups.length > 0) {
+        const lines = dups.map(k => {
           const names = tools.filter(t => (t['快捷鍵']||'').trim().toUpperCase()===k).map(t=>t['名稱']).join('、');
           return `  "${k}"  →  ${names}`;
         }).join('\n');
-        const msg = `⚠️ 快捷鍵衝突提醒\n\n以下字母有重複設定，只有第一個會生效：\n${lines}\n\n請到試算表修改，確保每個字母只用一次。`;
-        setTimeout(() => alert(msg), 800);
+        setTimeout(() => alert(`⚠️ 快捷鍵衝突\n\n以下字母重複，只有第一個生效：\n${lines}\n\n請到試算表修正。`), 800);
       }
     }
 
     // ── 建立 UI ──
     function buildUI(tools) {
-      allTools = tools;  // 存到全域供快捷鍵使用
-      checkShortcutConflicts(tools);  // 檢查快捷鍵衝突
+      allTools = tools;
+      checkShortcutConflicts(tools);
+
       const main   = document.getElementById('main');
       const tabBar = document.getElementById('tabBar');
-      main.innerHTML = '';
+      main.innerHTML   = '';
       tabBar.innerHTML = '';
 
+      // 過濾 + 排序
       const visible = tools
         .filter(t => t['顯示'] === '✓' && t['名稱'] && !t['名稱'].startsWith('←'))
         .sort((a, b) => parseInt(a['排序'] || 99) - parseInt(b['排序'] || 99));
 
+      // 動態分頁順序
       const pageOrder = [];
       visible.forEach(t => {
-        const pg = t['分頁'] || 'AI入口';
-        if (!pageOrder.includes(pg)) pageOrder.push(pg);
+        const pg = t['分頁'] || '';
+        if (pg && !pageOrder.includes(pg)) pageOrder.push(pg);
       });
 
+      // 分組
       const pages = {};
       pageOrder.forEach(p => pages[p] = []);
-      visible.forEach(t => pages[t['分頁'] || 'AI入口'].push(t));
+      visible.forEach(t => { if (t['分頁']) pages[t['分頁']].push(t); });
 
       // 建立 Tab
       let firstActive = true;
       pageOrder.forEach(pg => {
         if (!pages[pg]?.length) return;
         const btn = document.createElement('button');
-        btn.className = 'tab' + (firstActive ? ' active' : '');
+        btn.className   = 'tab' + (firstActive ? ' active' : '');
         btn.dataset.page = pg;
-        btn.innerHTML = `<span class="dot"></span>${PAGE_EMOJI[pg] || '🔹'} ${pg}`;
-        btn.onclick = () => switchPage(pg);
+        btn.innerHTML   = `<span class="dot"></span>${PAGE_EMOJI[pg] || '🔹'} ${pg}`;
+        btn.onclick     = () => switchPage(pg);
         tabBar.appendChild(btn);
         firstActive = false;
       });
@@ -459,6 +434,7 @@
         pageEl.className = 'page' + (pageOrder.indexOf(pg) === 0 ? ' active' : '');
         pageEl.id = 'page-' + pg;
 
+        // 區塊分組
         const blocks = {};
         pages[pg].forEach(t => {
           const b = t['區塊'] || '其他';
@@ -470,57 +446,55 @@
           const sec = document.createElement('div');
           sec.className = 'section';
 
-          // 只有 02-專案中 和 03-備課站 套用主從層效果
-          const useLayerStyle = pg === '02-專案中' || pg === '03-備課站';
-          if (useLayerStyle) {
+          // 02、03 才套用主從層
+          const useLayer = pg === '02-專案中' || pg === '03-備課站';
+          if (useLayer) {
             const isSub = blockName.endsWith('檔案') || blockName.endsWith('資料');
-            const colorMap = {
-              '02-專案中': { bg: 'rgba(224,67,111,0.10)', border: 'rgba(224,67,111,0.25)', bar: 'rgba(224,67,111,0.35)' },
-              '03-備課站': { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
-            };
-            const colors = colorMap[pg];
+            const c = LAYER_COLORS[pg];
             if (isSub) {
               sec.classList.add('is-sub');
-              sec.style.setProperty('--sub-bar-color', colors.bar);
+              sec.style.setProperty('--sub-bar-color', c.bar);
             } else {
               sec.classList.add('is-primary');
-              sec.style.setProperty('--primary-card-bg', colors.bg);
-              sec.style.setProperty('--primary-card-border', colors.border);
+              sec.style.setProperty('--primary-card-bg',     c.bg);
+              sec.style.setProperty('--primary-card-border', c.border);
             }
           }
 
+          // 區塊標題
           const hdr = document.createElement('div');
           hdr.className = 'section-header';
           const lbl = document.createElement('span');
-          lbl.className = 'section-label';
+          lbl.className  = 'section-label';
           lbl.style.color = PAGE_COLOR[pg] || 'var(--c-ai)';
           lbl.textContent = blockName;
           hdr.appendChild(lbl);
           hdr.appendChild(Object.assign(document.createElement('div'), { className: 'section-line' }));
           sec.appendChild(hdr);
 
+          // 卡片
           const isSheet = pg === '試算表' && blockName === '試算表';
           const grid = document.createElement('div');
           grid.className = isSheet ? 'sheet-grid' : 'card-grid';
 
           items.forEach(t => {
-            const url = t['網址'] || '#';
+            const url       = t['網址'] || '#';
             const isPending = url.includes('請填入');
-            const iconVal = t['圖示(emoji)'] || '';
-            const a = document.createElement('a');
-            a.href = isPending ? '#' : url;
-            if (!isPending && t['開新分頁'] === '✓') a.target = '_blank';
-            a.rel = 'noopener';
-            if (isPending) a.onclick = e => e.preventDefault();
+            const iconVal   = t['圖示(emoji)'] || '';
+            const badge     = isPending ? '<span class="pending">待填</span>' : '';
 
-            const pendingBadge = isPending ? '<span class="pending">待填</span>' : '';
+            const a = document.createElement('a');
+            a.href    = isPending ? '#' : url;
+            a.rel     = 'noopener';
+            if (!isPending && t['開新分頁'] === '✓') a.target = '_blank';
+            if (isPending) a.onclick = e => e.preventDefault();
 
             if (isSheet) {
               a.className = 'sheet-chip';
               a.innerHTML = `
                 ${renderIcon(iconVal, url, 'sheet-icon-wrap')}
                 <div>
-                  <div class="sheet-name">${t['名稱']}${pendingBadge}</div>
+                  <div class="sheet-name">${t['名稱']}${badge}</div>
                   ${t['說明'] ? `<div class="sheet-desc">${t['說明']}</div>` : ''}
                 </div>`;
             } else {
@@ -528,7 +502,7 @@
               a.innerHTML = `
                 ${renderIcon(iconVal, url, 'icon-wrap')}
                 <div class="card-info">
-                  <div class="card-name">${t['名稱']}${pendingBadge}</div>
+                  <div class="card-name">${t['名稱']}${badge}</div>
                   ${t['說明'] ? `<div class="card-desc">${t['說明']}</div>` : ''}
                 </div>`;
             }
@@ -543,7 +517,7 @@
       });
 
       document.getElementById('last-update').textContent =
-        '更新：' + new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        '更新：' + new Date().toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
     }
 
     // ── 切換分頁 ──
@@ -561,7 +535,7 @@
         ]);
         applyTheme(parseCSV(themeText));
         buildUI(parseCSV(toolsText));
-      } catch (e) {
+      } catch(e) {
         document.getElementById('loading').innerHTML =
           `<div style="color:#f87171;font-family:monospace;font-size:12px;">
             ❌ 無法載入試算表<br><br>
@@ -577,8 +551,8 @@
     document.addEventListener('keydown', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-      // Control(⌃) + 字母 → 開啟對應工具
-      if (e.ctrlKey && !e.metaKey && e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
+      // Ctrl + 字母 → 開啟對應工具
+      if (e.ctrlKey && !e.metaKey && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
         const letter = e.key.toUpperCase();
         const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
         if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
@@ -588,6 +562,7 @@
         }
       }
 
+      // 數字鍵 1-9：切換分頁
       const tabs = [...document.querySelectorAll('.tab')];
       if (!tabs.length) return;
       const cur = tabs.findIndex(t => t.classList.contains('active'));
@@ -596,6 +571,7 @@
         if (t) switchPage(t.dataset.page);
         return;
       }
+      // 左右方向鍵：循環切換
       if (e.key === 'ArrowRight') switchPage(tabs[(cur + 1) % tabs.length].dataset.page);
       if (e.key === 'ArrowLeft')  switchPage(tabs[(cur - 1 + tabs.length) % tabs.length].dataset.page);
     });
