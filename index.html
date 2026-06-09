@@ -171,12 +171,14 @@
       background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--radius);
       text-decoration: none; color: var(--text);
-      transition: all 0.15s; cursor: pointer;
+      transition: all 0.25s ease; cursor: pointer;
+      filter: brightness(0.65);
     }
     .sheet-chip:hover {
       background: var(--c-sheet-bg);
       border-color: rgba(56, 189, 248, 0.35);
       transform: translateY(-1px);
+      filter: brightness(1.05);
     }
     .sheet-name { font-size: 14px; font-weight: 500; line-height: 1.35; }
     .sheet-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
@@ -189,9 +191,14 @@
       background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--radius);
       text-decoration: none; color: var(--text);
-      transition: all 0.15s; cursor: pointer;
+      transition: all 0.25s ease; cursor: pointer;
+      filter: brightness(0.65);
     }
-    .card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
     .card.ai:hover    { background: var(--c-ai-bg);    border-color: rgba(167, 139, 250, 0.3); }
     .card.flow:hover  { background: var(--c-flow-bg);  border-color: rgba(52, 211, 153, 0.3); }
     .card.class:hover { background: var(--c-class-bg); border-color: rgba(245, 158, 11, 0.3); }
@@ -251,38 +258,6 @@
       border-radius: 4px; background: rgba(245, 158, 11, 0.15); color: #f59e0b;
       margin-left: 4px; vertical-align: middle;
     }
-
-    /* ── PRIMARY CARD（主層加重底色）── */
-    .section.is-primary .card {
-      background: var(--primary-card-bg, var(--bg2));
-      border-color: var(--primary-card-border, var(--border));
-    }
-
-    /* ── SUB SECTION（子層：檔案/資料）── */
-    .section.is-sub {
-      margin-left: 12px;
-      padding-left: 14px;
-      border-left: 2px solid var(--sub-bar-color, rgba(167,139,250,0.35));
-    }
-    .section.is-sub .section-label {
-      font-size: 9px;
-      opacity: 0.65;
-    }
-    .section.is-sub .card-grid {
-      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-    }
-    .section.is-sub .card {
-      padding: 9px 11px;
-      opacity: 0.75;
-      background: var(--bg2);
-    }
-    .section.is-sub .card:hover { opacity: 1; }
-    .section.is-sub .icon-wrap {
-      width: 28px; height: 28px; font-size: 14px;
-    }
-    .section.is-sub .icon-wrap img { width: 16px; height: 16px; }
-    .section.is-sub .card-name { font-size: 12px; }
-    .section.is-sub .card-desc { font-size: 11px; }
   </style>
 </head>
 
@@ -435,25 +410,6 @@
         Object.entries(blocks).forEach(([blockName, items]) => {
           const sec = document.createElement('div');
           sec.className = 'section';
-
-          // 只有 02-專案中 和 03-備課站 才套用主從層效果
-          const useLayerStyle = pg === '02-專案中' || pg === '03-備課站';
-          if (useLayerStyle) {
-            const isSub = blockName.endsWith('檔案') || blockName.endsWith('資料');
-            const colorMap = {
-              '02-專案中': { bg: 'rgba(224,67,111,0.10)', border: 'rgba(224,67,111,0.25)', bar: 'rgba(224,67,111,0.35)' },
-              '03-備課站': { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
-            };
-            const colors = colorMap[pg];
-            if (isSub) {
-              sec.classList.add('is-sub');
-              sec.style.setProperty('--sub-bar-color', colors.bar);
-            } else {
-              sec.classList.add('is-primary');
-              sec.style.setProperty('--primary-card-bg', colors.bg);
-              sec.style.setProperty('--primary-card-border', colors.border);
-            }
-          }
 
           const hdr = document.createElement('div');
           hdr.className = 'section-header';
