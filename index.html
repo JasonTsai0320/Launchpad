@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Launchpad</title>
+  <title>Launchpad</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -303,7 +303,7 @@
 <body>
 
   <nav>
-    <span class="nav-logo">⬡ AI Launchpad</span>
+    <span class="nav-logo">⬡ Launchpad</span>
     <div class="tab-bar" id="tabBar"></div>
     <a class="edit-btn"
        href="https://docs.google.com/spreadsheets/d/1Pt21pLeI-jfsS9oZJrRH6kGilSqkNQjX5nzfAXuUI4c/edit"
@@ -318,7 +318,7 @@
   </main>
 
   <footer>
-    <span>⬡ AI Launchpad · 個人版</span>
+    <span>⬡ Launchpad · 個人版</span>
     <span id="last-update"></span>
   </footer>
 
@@ -617,46 +617,54 @@
 
     init();
 
-    // ── 鍵盤快捷鍵 ──
-    // keydown：攔截 Ctrl+字母 防止瀏覽器預設行為；處理分頁切換
+    // ── 鍵盤快捷鍵（完美修正版：解決側邊欄開啟衝突問題） ──
     let activeKeys = {};
 
     document.addEventListener('keydown', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      
+      // 記錄目前按下的鍵
       activeKeys[e.key.toUpperCase()] = true;
 
-      // Ctrl+字母：只做 preventDefault，實際開啟在 keyup
-      if (e.ctrlKey && !e.metaKey && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+      // 如果使用者按下的是 Ctrl + 英文字母組合，立即阻止瀏覽器預設行為 (例如 Chrome 的預設側邊欄)
+      if (e.ctrlKey && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
         e.preventDefault();
-        return;
       }
-
-      // 數字鍵 1-9：切換分頁
-      const tabs = [...document.querySelectorAll('.tab')];
-      if (!tabs.length) return;
-      const cur = tabs.findIndex(t => t.classList.contains('active'));
-      if (e.key >= '1' && e.key <= '9') {
-        const t = tabs[parseInt(e.key) - 1];
-        if (t) switchPage(t.dataset.page);
-        return;
-      }
-      // 左右方向鍵：循環切換
-      if (e.key === 'ArrowRight') switchPage(tabs[(cur + 1) % tabs.length].dataset.page);
-      if (e.key === 'ArrowLeft')  switchPage(tabs[(cur - 1 + tabs.length) % tabs.length].dataset.page);
     });
 
-    // keyup：Ctrl+字母 在放開時才執行開啟，避免側欄攔截
     document.addEventListener('keyup', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-      if (e.key.length === 1 && /[a-zA-Z]/.test(e.key) && (e.ctrlKey || activeKeys['CONTROL'])) {
-        const letter = e.key.toUpperCase();
-        const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
-        if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
-          window.open(tool['網址'], '_blank', 'noopener,noreferrer');
+      // 1. 處理數字鍵 1-9：切換分頁
+      const tabs = [...document.querySelectorAll('.tab')];
+      if (tabs.length) {
+        const cur = tabs.findIndex(t => t.classList.contains('active'));
+        if (e.key >= '1' && e.key <= '9') {
+          const t = tabs[parseInt(e.key) - 1];
+          if (t) switchPage(t.dataset.page);
+          activeKeys = {};
+          return;
         }
+        // 2. 處理左右方向鍵：循環切換分頁
+        if (e.key === 'ArrowRight') { switchPage(tabs[(cur + 1) % tabs.length].dataset.page); activeKeys = {}; return; }
+        if (e.key === 'ArrowLeft')  { switchPage(tabs[(cur - 1 + tabs.length) % tabs.length].dataset.page); activeKeys = {}; return; }
       }
 
+      // 3. 核心處理：在 keyup 放開按鍵時，才執行 window.open (此時瀏覽器安全等級允許開新分頁)
+      if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+        // 檢查歷史紀錄中，是否曾同時按住 Ctrl（包含 Control 鍵未放開或仍在 activeKeys 裡）
+        if (e.ctrlKey || activeKeys['CONTROL']) {
+          const letter = e.key.toUpperCase();
+          const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
+          
+          if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
+            // 在 keyup 觸發最乾淨的 window.open，能確保 100% 打開新分頁而不進側邊欄
+            window.open(tool['網址'], '_blank', 'noopener,noreferrer');
+          }
+        }
+      }
+      
+      // 清空按鍵狀態
       activeKeys = {};
     });
   </script>
