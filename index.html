@@ -223,40 +223,6 @@
       display: flex; justify-content: space-between; align-items: center;
     }
 
-    /* ── SUB SECTION（子層：檔案/資料）── */
-    .section.is-sub {
-      margin-left: 12px;
-      padding-left: 14px;
-      border-left: 2px solid var(--sub-bar-color, rgba(167,139,250,0.35));
-    }
-    .section.is-sub .section-label {
-      font-size: 9px;
-      opacity: 0.65;
-    }
-    .section.is-sub .card-grid {
-      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-    }
-    .section.is-sub .card {
-      padding: 10px 12px;
-      opacity: 0.88;
-    }
-    .section.is-sub .card:hover {
-      opacity: 1;
-    }
-    .section.is-sub .icon-wrap {
-      width: 30px; height: 30px;
-      font-size: 15px;
-    }
-    .section.is-sub .icon-wrap img {
-      width: 18px; height: 18px;
-    }
-    .section.is-sub .card-name {
-      font-size: 13px;
-    }
-    .section.is-sub .card-desc {
-      font-size: 11px;
-    }
-
     /* ── EDIT BUTTON ── */
     .edit-btn {
       display: flex; align-items: center; gap: 6px;
@@ -285,6 +251,38 @@
       border-radius: 4px; background: rgba(245, 158, 11, 0.15); color: #f59e0b;
       margin-left: 4px; vertical-align: middle;
     }
+
+    /* ── PRIMARY CARD（主層加重底色）── */
+    .section.is-primary .card {
+      background: var(--primary-card-bg, var(--bg2));
+      border-color: var(--primary-card-border, var(--border));
+    }
+
+    /* ── SUB SECTION（子層：檔案/資料）── */
+    .section.is-sub {
+      margin-left: 12px;
+      padding-left: 14px;
+      border-left: 2px solid var(--sub-bar-color, rgba(167,139,250,0.35));
+    }
+    .section.is-sub .section-label {
+      font-size: 9px;
+      opacity: 0.65;
+    }
+    .section.is-sub .card-grid {
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    }
+    .section.is-sub .card {
+      padding: 9px 11px;
+      opacity: 0.75;
+      background: var(--bg2);
+    }
+    .section.is-sub .card:hover { opacity: 1; }
+    .section.is-sub .icon-wrap {
+      width: 28px; height: 28px; font-size: 14px;
+    }
+    .section.is-sub .icon-wrap img { width: 16px; height: 16px; }
+    .section.is-sub .card-name { font-size: 12px; }
+    .section.is-sub .card-desc { font-size: 11px; }
   </style>
 </head>
 
@@ -438,18 +436,23 @@
           const sec = document.createElement('div');
           sec.className = 'section';
 
-          // 子層判斷：區塊名稱最後兩個字為「檔案」或「資料」
+          // 主從層判斷
           const isSub = blockName.endsWith('檔案') || blockName.endsWith('資料');
+          const primaryColorMap = {
+            'AI入口':   { bg: 'rgba(167,139,250,0.10)', border: 'rgba(167,139,250,0.25)', bar: 'rgba(167,139,250,0.35)' },
+            '試算表':   { bg: 'rgba(56,189,248,0.10)',  border: 'rgba(56,189,248,0.25)',  bar: 'rgba(56,189,248,0.35)' },
+            '工作流程': { bg: 'rgba(52,211,153,0.10)',  border: 'rgba(52,211,153,0.25)',  bar: 'rgba(52,211,153,0.35)' },
+            '課程專用': { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
+          };
+          const colors = primaryColorMap[pg] || primaryColorMap['AI入口'];
+
           if (isSub) {
             sec.classList.add('is-sub');
-            // 色條顏色：用該分頁主色，透明度 35%
-            const subColorMap = {
-              'AI入口':   'rgba(167,139,250,0.35)',
-              '試算表':   'rgba(56,189,248,0.35)',
-              '工作流程': 'rgba(52,211,153,0.35)',
-              '課程專用': 'rgba(245,158,11,0.35)',
-            };
-            sec.style.setProperty('--sub-bar-color', subColorMap[pg] || 'rgba(167,139,250,0.35)');
+            sec.style.setProperty('--sub-bar-color', colors.bar);
+          } else {
+            sec.classList.add('is-primary');
+            sec.style.setProperty('--primary-card-bg', colors.bg);
+            sec.style.setProperty('--primary-card-border', colors.border);
           }
 
           const hdr = document.createElement('div');
