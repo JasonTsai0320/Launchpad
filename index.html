@@ -627,7 +627,9 @@
         const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
         if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
           e.preventDefault();
-          window.open(tool['網址'], '_blank');
+          const a = document.createElement('a');
+          a.href = tool['網址']; a.target = '_blank'; a.rel = 'noopener';  
+          a.click();
           return;
         }
       }
