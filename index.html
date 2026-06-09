@@ -223,6 +223,40 @@
       display: flex; justify-content: space-between; align-items: center;
     }
 
+    /* ── SUB SECTION（子層：檔案/資料）── */
+    .section.is-sub {
+      margin-left: 12px;
+      padding-left: 14px;
+      border-left: 2px solid var(--sub-bar-color, rgba(167,139,250,0.35));
+    }
+    .section.is-sub .section-label {
+      font-size: 9px;
+      opacity: 0.65;
+    }
+    .section.is-sub .card-grid {
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    }
+    .section.is-sub .card {
+      padding: 10px 12px;
+      opacity: 0.88;
+    }
+    .section.is-sub .card:hover {
+      opacity: 1;
+    }
+    .section.is-sub .icon-wrap {
+      width: 30px; height: 30px;
+      font-size: 15px;
+    }
+    .section.is-sub .icon-wrap img {
+      width: 18px; height: 18px;
+    }
+    .section.is-sub .card-name {
+      font-size: 13px;
+    }
+    .section.is-sub .card-desc {
+      font-size: 11px;
+    }
+
     /* ── EDIT BUTTON ── */
     .edit-btn {
       display: flex; align-items: center; gap: 6px;
@@ -403,6 +437,20 @@
         Object.entries(blocks).forEach(([blockName, items]) => {
           const sec = document.createElement('div');
           sec.className = 'section';
+
+          // 子層判斷：區塊名稱最後兩個字為「檔案」或「資料」
+          const isSub = blockName.endsWith('檔案') || blockName.endsWith('資料');
+          if (isSub) {
+            sec.classList.add('is-sub');
+            // 色條顏色：用該分頁主色，透明度 35%
+            const subColorMap = {
+              'AI入口':   'rgba(167,139,250,0.35)',
+              '試算表':   'rgba(56,189,248,0.35)',
+              '工作流程': 'rgba(52,211,153,0.35)',
+              '課程專用': 'rgba(245,158,11,0.35)',
+            };
+            sec.style.setProperty('--sub-bar-color', subColorMap[pg] || 'rgba(167,139,250,0.35)');
+          }
 
           const hdr = document.createElement('div');
           hdr.className = 'section-header';
