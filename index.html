@@ -630,7 +630,7 @@
         const a = document.createElement('a');
         a.href = tool['網址'];
         if (tool['開新分頁'] === '✓') a.target = '_blank';
-        a.rel = 'noopener';
+        a.rel = 'noopener noreferrer';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
