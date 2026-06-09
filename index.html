@@ -436,23 +436,23 @@
           const sec = document.createElement('div');
           sec.className = 'section';
 
-          // 主從層判斷
-          const isSub = blockName.endsWith('檔案') || blockName.endsWith('資料');
-          const primaryColorMap = {
-            'AI入口':   { bg: 'rgba(167,139,250,0.10)', border: 'rgba(167,139,250,0.25)', bar: 'rgba(167,139,250,0.35)' },
-            '試算表':   { bg: 'rgba(56,189,248,0.10)',  border: 'rgba(56,189,248,0.25)',  bar: 'rgba(56,189,248,0.35)' },
-            '工作流程': { bg: 'rgba(52,211,153,0.10)',  border: 'rgba(52,211,153,0.25)',  bar: 'rgba(52,211,153,0.35)' },
-            '課程專用': { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
-          };
-          const colors = primaryColorMap[pg] || primaryColorMap['AI入口'];
-
-          if (isSub) {
-            sec.classList.add('is-sub');
-            sec.style.setProperty('--sub-bar-color', colors.bar);
-          } else {
-            sec.classList.add('is-primary');
-            sec.style.setProperty('--primary-card-bg', colors.bg);
-            sec.style.setProperty('--primary-card-border', colors.border);
+          // 只有 02-專案中 和 03-備課站 才套用主從層效果
+          const useLayerStyle = pg === '02-專案中' || pg === '03-備課站';
+          if (useLayerStyle) {
+            const isSub = blockName.endsWith('檔案') || blockName.endsWith('資料');
+            const colorMap = {
+              '02-專案中': { bg: 'rgba(224,67,111,0.10)', border: 'rgba(224,67,111,0.25)', bar: 'rgba(224,67,111,0.35)' },
+              '03-備課站': { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.25)',  bar: 'rgba(245,158,11,0.35)' },
+            };
+            const colors = colorMap[pg];
+            if (isSub) {
+              sec.classList.add('is-sub');
+              sec.style.setProperty('--sub-bar-color', colors.bar);
+            } else {
+              sec.classList.add('is-primary');
+              sec.style.setProperty('--primary-card-bg', colors.bg);
+              sec.style.setProperty('--primary-card-border', colors.border);
+            }
           }
 
           const hdr = document.createElement('div');
