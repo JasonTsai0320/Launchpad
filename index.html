@@ -393,9 +393,33 @@
       setVar('--radius',       '圓角大小');
     }
 
+    // ── 快捷鍵衝突檢查 ──
+    function checkShortcutConflicts(tools) {
+      const seen = {};
+      const duplicates = [];
+      tools.forEach(t => {
+        const k = (t['快捷鍵'] || '').trim().toUpperCase();
+        if (!k || k.length !== 1 || !k.match(/[A-Z]/)) return;
+        if (seen[k]) {
+          if (!duplicates.includes(k)) duplicates.push(k);
+        } else {
+          seen[k] = t['名稱'] || '';
+        }
+      });
+      if (duplicates.length > 0) {
+        const lines = duplicates.map(k => {
+          const names = tools.filter(t => (t['快捷鍵']||'').trim().toUpperCase()===k).map(t=>t['名稱']).join('、');
+          return `  "${k}"  →  ${names}`;
+        }).join('\n');
+        const msg = `⚠️ 快捷鍵衝突提醒\n\n以下字母有重複設定，只有第一個會生效：\n${lines}\n\n請到試算表修改，確保每個字母只用一次。`;
+        setTimeout(() => alert(msg), 800);
+      }
+    }
+
     // ── 建立 UI ──
     function buildUI(tools) {
       allTools = tools;  // 存到全域供快捷鍵使用
+      checkShortcutConflicts(tools);  // 檢查快捷鍵衝突
       const main   = document.getElementById('main');
       const tabBar = document.getElementById('tabBar');
       main.innerHTML = '';
@@ -553,8 +577,8 @@
     document.addEventListener('keydown', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-      // Ctrl + 字母 → 開啟對應工具
-      if (e.ctrlKey && !e.metaKey && e.key.length === 1) {
+      // 直接按字母 → 開啟對應工具
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && e.key.length === 1 && e.key.match(/[a-zA-Z]/)) {
         const letter = e.key.toUpperCase();
         const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
         if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
