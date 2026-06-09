@@ -325,26 +325,64 @@
 
     // ── CSV 解析 ──
     function parseCSV(text) {
-      const lines = text.trim().split('\n');
-      const headers = splitCSVLine(lines[0]).map(h => h.trim().split(/[\s←]+/)[0] || h.trim());
-      return lines.slice(1).map(l => {
-        const vals = splitCSVLine(l);
+      const rows = [];
+      let row = [];
+      let val = '';
+      let inQuote = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        const next = text[i + 1];
+
+        if (inQuote) {
+          if (c === '"') {
+            if (next === '"') {
+              val += '"';
+              i++;
+            } else {
+              inQuote = false;
+            }
+          } else {
+            val += c;
+          }
+        } else {
+          if (c === '"') {
+            inQuote = true;
+          } else if (c === ',') {
+            row.push(val);
+            val = '';
+          } else if (c === '\r' || c === '\n') {
+            row.push(val);
+            val = '';
+            if (row.length > 0 && (row.length > 1 || row[0] !== '')) {
+              rows.push(row);
+            }
+            row = [];
+            if (c === '\r' && next === '\n') {
+              i++;
+            }
+          } else {
+            val += c;
+          }
+        }
+      }
+      if (val !== '' || row.length > 0) {
+        row.push(val);
+        rows.push(row);
+      }
+
+      if (rows.length === 0) return [];
+
+      const headerRow = rows[0];
+      const headers = headerRow.map(h => h.trim().split(/[\s←]+/)[0] || h.trim());
+
+      return rows.slice(1).map(r => {
         const obj = {};
-        headers.forEach((h, i) => obj[h] = (vals[i] || '').trim());
+        headers.forEach((h, i) => {
+          obj[h] = (r[i] || '').trim();
+        });
         return obj;
       });
-    }
-
-    function splitCSVLine(line) {
-      const result = []; let cur = ''; let inQ = false;
-      for (let i = 0; i < line.length; i++) {
-        const c = line[i];
-        if (c === '"') { inQ = !inQ; }
-        else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
-        else { cur += c; }
-      }
-      result.push(cur);
-      return result;
     }
 
     // ── 套用主題 ──
