@@ -553,8 +553,8 @@
     document.addEventListener('keydown', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-      // Option(⌥) + 字母 → 開啟對應工具
-      if (e.altKey && e.key.length === 1) {
+      // Ctrl + 字母 → 開啟對應工具
+      if (e.ctrlKey && !e.metaKey && e.key.length === 1) {
         const letter = e.key.toUpperCase();
         const tool = allTools.find(t => (t['快捷鍵'] || '').trim().toUpperCase() === letter);
         if (tool && tool['網址'] && !tool['網址'].includes('請填入')) {
