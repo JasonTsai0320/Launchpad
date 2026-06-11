@@ -504,15 +504,17 @@
         pageEl.className = 'page' + (pageOrder.indexOf(pg) === 0 ? ' active' : '');
         pageEl.id = 'page-' + pg;
 
-        // 區塊分組
+        // 區塊分組（用陣列保持試算表順序）
+        const blockOrder = [];
         const blocks = {};
         pages[pg].forEach(t => {
           const b = t['區塊'] || '其他';
-          if (!blocks[b]) blocks[b] = [];
+          if (!blocks[b]) { blocks[b] = []; blockOrder.push(b); }
           blocks[b].push(t);
         });
 
-        Object.entries(blocks).forEach(([blockName, items]) => {
+        blockOrder.forEach(blockName => {
+          const items = blocks[blockName];
           const sec = document.createElement('div');
           sec.className = 'section';
 
